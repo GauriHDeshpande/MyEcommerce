@@ -1,7 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Table } from "antd";
-import {BiEditAlt} from 'react-icons/bi';
-import {AiOutlineDelete} from 'react-icons/ai'
+import {BiEdit} from 'react-icons/bi';
+import {AiFillDelete} from 'react-icons/ai';
+import {useDispatch, useSelector} from 'react-redux';
+import { getAllProducts } from '../features/product/productSlice';
+import {Link} from 'react-router-dom'
 
 const columns = [
   {
@@ -9,29 +12,63 @@ const columns = [
     dataIndex: "key",
   },
   {
-    title: "Name",
-    dataIndex: "name",
+    title: "Title",
+    dataIndex: "title",
+    sorter: (a, b) => a.title.length - b.title.length,
   },
   {
-    title: "Product",
-    dataIndex: "product",
+    title: "Brand",
+    dataIndex: "brand",
+    sorter: (a, b) => a.brand.length - b.brand.length,
   },
   {
-    title: "Status",
-    dataIndex: "staus",
+    title: "Category",
+    dataIndex: "category",
+    sorter: (a, b) => a.category.length - b.category.length,
+  },
+  {
+    title: "Color",
+    dataIndex: "color",
+  },
+  {
+    title: "Price",
+    dataIndex: "price",
+    sorter: (a, b) => a.price - b.price,
+  },
+  {
+    title: "Action",
+    dataIndex: "action",
   },
 ];
-const data1 = [];
-for (let i = 0; i < 46; i++) {
-  data1.push({
-    key: i,
-    name: `Edward King ${i}`,
-    product: 32,
-    staus: `London, Park Lane no. ${i}`,
-  });
-}
 
 const ProductList = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getAllProducts());
+  }, []);
+  const productState = useSelector((state) => state.product.products);
+  const data1 = [];
+  for (let i = 0; i < productState.length; i++) {
+    data1.push({
+      key: i + 1,
+      title: productState[i].title,
+      brand: productState[i].brand,
+      category: productState[i].category,
+      color: productState[i].color,
+      price: `${productState[i].price}`,
+      action: (
+        <>
+          <Link to="/" className=" fs-3 text-danger">
+            <BiEdit />
+          </Link>
+          <Link className="ms-3 fs-3 text-danger" to="/">
+            <AiFillDelete />
+          </Link>
+        </>
+      ),
+    });
+  }
+  
   return (
     <div>
       <h3 className="mb-4 title">Product List</h3>

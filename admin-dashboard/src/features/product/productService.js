@@ -1,9 +1,14 @@
-import React from react;
+import { base_url } from '../../utils/baseURL';
+import axios from 'axios';
 
-const productService = () => {
-    return(
-        <div>productService</div>
-    )
+const getAllProducts = async () => {
+  const response = await axios.get(`${base_url}product/get-all-products`);
+  return response.data;
 };
+
+const productService = {
+  getAllProducts,
+};
+
 
 export default productService;
